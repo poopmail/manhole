@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="PoopmailGui.MainWindow"
+        Title="PoopmailGui"
+        Width="600"
+        Height="400"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+        <DockPanel LastChildFill="True">
+                <Border Height="25" BorderThickness="1" DockPanel.Dock="Top">
+                        <TextBlock Name="TitleMailbox" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                Mailbox
+                        </TextBlock>
+                </Border>
+                <Border Height="25" Background="LemonChiffon" BorderThickness="0" DockPanel.Dock="Bottom">
+                        <TextBlock Foreground="Black">Dock = "Bottom"</TextBlock>
+                </Border>
+                <Border Width="200" BorderThickness="1" BorderBrush="Gray" DockPanel.Dock="Left">
+                        <ListBox Name="ListMails"></ListBox>
+                </Border>
+                <Border BorderThickness="0">
+                        <TextBlock Foreground="Black">This content will "Fill" the remaining space</TextBlock>
+                </Border>
+        </DockPanel>
+</Window>

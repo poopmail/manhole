@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="PoopmailGui.LoginWindow"
+        Title="Poopmail Manhole"
+        Width="600"
+        Height="400"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+    <StackPanel Margin="50" Spacing="5">
+        <TextBlock Width="200" Height="20" TextAlignment="Center">Poopmail Login</TextBlock>
+                
+        <TextBox Name="BoxLoginName" Watermark="User" Width="200" Height="20"></TextBox>
+        <TextBox Name="BoxLoginPass" PasswordChar="*" Watermark="Password" Width="200" Height="20"></TextBox>
+                
+        <Panel Width="100" Height="50"></Panel>
+        <Button Width="300" Height="40" HorizontalAlignment="Center" Click="ButtonLogin_OnClick">
+            <TextBlock TextAlignment="Center" VerticalAlignment="Center">
+                Login
+            </TextBlock>
+        </Button>
+        
+        <Panel Width="100" Height="50"></Panel>
+        <TextBlock Name="BlockError" Width="2000" Height="20" TextAlignment="Center"></TextBlock>
+        <ToggleSwitch Name="ToggleStaging" Width="150" OnContent="Staging server" OffContent="Live server" HorizontalAlignment="Center" HorizontalContentAlignment="Center"></ToggleSwitch>
+    </StackPanel>
+</Window>
