@@ -25,6 +25,11 @@
         
         <Panel Width="100" Height="50"></Panel>
         <TextBlock Name="BlockError" Width="2000" Height="20" TextAlignment="Center"></TextBlock>
-        <ToggleSwitch Name="ToggleStaging" Width="150" OnContent="Staging server" OffContent="Live server" HorizontalAlignment="Center" HorizontalContentAlignment="Center"></ToggleSwitch>
+        
+        <StackPanel Spacing="10" HorizontalAlignment="Center" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" TextAlignment="Right">Live server</TextBlock>
+            <ToggleSwitch Name="ToggleStaging" Width="39.5" OnContent="" OffContent="" HorizontalAlignment="Center" HorizontalContentAlignment="Center"></ToggleSwitch>
+            <TextBlock VerticalAlignment="Center" TextAlignment="Left">Staging server</TextBlock>
+        </StackPanel>
     </StackPanel>
 </Window>

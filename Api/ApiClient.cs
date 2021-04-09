@@ -12,9 +12,9 @@ namespace PoopmailGui.Api
     {
         private const string ApiServer = "https://api.poopmail.pm";
         private const string ApiServerDev = "https://api.s.poopmail.pm";
-        private string ApiServerInUse;
 
         private readonly RestClient _restClient;
+        private readonly string ApiServerInUse;
 
         public ApiClient(bool dev)
         {
@@ -29,12 +29,8 @@ namespace PoopmailGui.Api
             _restClient.CookieContainer = new CookieContainer();
         }
 
-        public Result<Mailbox> CreateMailbox(string rft, string act, string mail)
+        public Result<Mailbox> CreateMailbox(string rft, string act, string key, string domain)
         {
-            var split = mail.Split("@");
-            var key = split[0];
-            var domain = split.Length > 1 ? split[1] : "";
-
             var response = MakeApiRequest("/v1/mailboxes",
                 "{\"key\": \"" + key + "\", \"domain\": \"" + domain + "\", \"account\": \"@me\"}",
                 new Dictionary<string, string>
@@ -54,7 +50,7 @@ namespace PoopmailGui.Api
                         {"Content-Type", "application/json"}, {"Authorization", "Bearer " + act}
                     }, new Dictionary<string, string>
                     {
-                        {"account", "@me"}
+                        {"account", "@me"}, {"limit", int.MaxValue.ToString()}
                     },
                     new Dictionary<string, string>(), "POST");
             }
@@ -66,6 +62,58 @@ namespace PoopmailGui.Api
             return new Result<Mailbox> {Obj = obj, Response = response};
         }
 
+        public Result<List<string>> GetDomains(string rft, string act)
+        {
+            var response = MakeApiRequest("/v1/domains",
+                "",
+                new Dictionary<string, string>
+                {
+                    {"Content-Type", "application/json"}, {"Authorization", "Bearer " + act}
+                }, new Dictionary<string, string>(),
+                new Dictionary<string, string>(), "GET");
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                act = GetAccessToken(rft).Obj.Token;
+                response = MakeApiRequest("/v1/domains",
+                    "",
+                    new Dictionary<string, string>
+                    {
+                        {"Content-Type", "application/json"}, {"Authorization", "Bearer " + act}
+                    }, new Dictionary<string, string>(),
+                    new Dictionary<string, string>(), "GET");
+            }
+
+            if (!isGood(response.StatusCode))
+                return new Result<List<string>> {Obj = new List<string>(), Response = response};
+
+            var obj = JsonConvert.DeserializeObject<List<string>>(response.Response);
+            return new Result<List<string>> {Obj = obj, Response = response};
+        }
+
+        public Result<HttpStatusCode> DeleteMailbox(string rft, string act, string mail)
+        {
+            var response = MakeApiRequest("/v1/mailboxes/" + mail,
+                "",
+                new Dictionary<string, string>
+                {
+                    {"Content-Type", "application/json"}, {"Authorization", "Bearer " + act}
+                }, new Dictionary<string, string>(),
+                new Dictionary<string, string>(), "DELETE");
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                act = GetAccessToken(rft).Obj.Token;
+                response = MakeApiRequest("/v1/mailboxes/" + mail,
+                    "",
+                    new Dictionary<string, string>
+                    {
+                        {"Content-Type", "application/json"}, {"Authorization", "Bearer " + act}
+                    }, new Dictionary<string, string>(),
+                    new Dictionary<string, string>(), "DELETE");
+            }
+
+            return new Result<HttpStatusCode> {Obj = response.StatusCode, Response = response};
+        }
+
         public Result<MailboxResponse> GetMailboxes(string rft, string act)
         {
             var response = MakeApiRequest("/v1/mailboxes", "", new Dictionary<string, string>
@@ -73,7 +121,7 @@ namespace PoopmailGui.Api
                     {"Content-Type", "application/json"}, {"Authorization", "Bearer " + act}
                 }, new Dictionary<string, string>
                 {
-                    {"account", "@me"}
+                    {"account", "@me"}, {"limit", int.MaxValue.ToString()}
                 },
                 new Dictionary<string, string>(), "GET");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -206,8 +254,7 @@ namespace PoopmailGui.Api
 
         private bool isGood(HttpStatusCode responseStatusCode)
         {
-            return (int)responseStatusCode >= 200 && (int)responseStatusCode < 300;
+            return (int) responseStatusCode >= 200 && (int) responseStatusCode < 300;
         }
-        
     }
 }
